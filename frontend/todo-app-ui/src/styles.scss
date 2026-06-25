@@ -1,0 +1,16 @@
+:root { font-family: Inter, Arial, sans-serif; color: #172033; background: #f5f7fb; }
+body { margin: 0; }
+button, input { font: inherit; }
+.container { max-width: 860px; margin: 40px auto; padding: 0 16px; }
+.card { background: white; border-radius: 16px; padding: 24px; box-shadow: 0 10px 30px rgba(10, 20, 40, 0.08); }
+.row { display: flex; gap: 12px; }
+input { flex: 1; padding: 12px 14px; border-radius: 10px; border: 1px solid #cfd7e6; }
+button { border: 0; border-radius: 10px; padding: 12px 16px; cursor: pointer; }
+.primary { background: #1f6feb; color: white; }
+.danger { background: #fee2e2; color: #991b1b; }
+.muted { color: #64748b; }
+.error { color: #b91c1c; margin-top: 12px; }
+ul { list-style: none; padding: 0; margin: 24px 0 0; }
+li { display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #eef2f7; padding: 14px 0; gap: 12px; }
+.completed { text-decoration: line-through; color: #64748b; }
+.actions { display: flex; gap: 8px; }
