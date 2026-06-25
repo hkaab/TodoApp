@@ -108,4 +108,28 @@ public class TodosControllerTests
         Assert.Empty(value);
 
     }
+    [Fact]
+    public async Task CreateTodo_ShouldSendCommand_ToMediator()
+    {
+        var todoId = Guid.NewGuid();
+        var command = new CreateTodoCommand("Test todo");
+        var createdTodoDto = new TodoDto(
+            todoId,
+            "Task 1",
+            true, // Assuming the task was toggled to completed
+            DateTime.UtcNow,
+            DateTime.UtcNow
+        );
+        _mediatorMock
+            .Setup(x => x.Send(command, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(createdTodoDto);
+
+        var result = await _controller.Create(command, CancellationToken.None);
+
+        Assert.IsType<CreatedAtActionResult>(result);
+
+        _mediatorMock.Verify(
+            x => x.Send(command, It.IsAny<CancellationToken>()),
+            Times.Once);
+    }
 }
