@@ -1,8 +1,7 @@
-# TodoApp Production-Quality Sample
-
-Full-stack TODO application using:
+# Todo App
 
 - **Backend:** ASP.NET Core Web API, Clean Architecture, SOLID, CQRS with MediatR, FluentValidation, global exception middleware, Serilog, Swagger, in-memory repository.
+
 - **Frontend:** Angular standalone app, Reactive Forms, HttpClient, typed service layer, interceptor-based API error handling.
 
 ## Run backend
