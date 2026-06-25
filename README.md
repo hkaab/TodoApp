@@ -9,6 +9,28 @@
 
 ## Run backend
 
+# Prerequisites
+
+Install:
+
+- .NET 10 SDK
+
+Verify installation:
+
+```bash
+dotnet --version
+```
+
+Expected:
+
+```text
+10.0.100
+```
+
+(or later)
+
+---
+
 ```bash
 cd backend/src/TodoApp.Api
 dotnet restore
