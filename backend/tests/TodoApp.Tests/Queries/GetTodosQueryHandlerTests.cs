@@ -19,8 +19,8 @@ namespace TodoApp.Application.Tests.Queries
             // Arrange
             var todos = new List<TodoItem>
             {
-                new TodoItem ("Todo 1"),
-                new TodoItem ("Todo 2")
+                new("Todo 1"),
+                new("Todo 2")
             };
             var repositoryMock = new Mock<ITodoRepository>();
             repositoryMock.Setup(r => r.GetAllAsync(It.IsAny<CancellationToken>())).ReturnsAsync(todos);
