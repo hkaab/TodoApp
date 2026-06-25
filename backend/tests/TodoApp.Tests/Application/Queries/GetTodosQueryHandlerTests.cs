@@ -9,7 +9,7 @@ using TodoApp.Application.Todos.Queries.GetTodos;
 using TodoApp.Domain.Todos;
 using Xunit;
 
-namespace TodoApp.Application.Tests.Queries
+namespace TodoApp.Tests.Application.Queries
 {
     public class GetTodosQueryHandlerTests
     {

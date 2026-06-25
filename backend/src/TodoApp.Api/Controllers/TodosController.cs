@@ -19,14 +19,17 @@ public sealed class TodosController : ControllerBase
     public TodosController(ISender sender) => _sender = sender;
 
     [HttpGet]
+    [ProducesResponseType(200)]
     public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
         => Ok(await _sender.Send(new GetTodosQuery(), cancellationToken));
 
     [HttpGet("{id:guid}")]
+    [ProducesResponseType(200)]
     public async Task<IActionResult> GetById(Guid id, CancellationToken cancellationToken)
         => Ok(await _sender.Send(new GetTodoByIdQuery(id), cancellationToken));
 
     [HttpPost]
+    [ProducesResponseType(200)]
     public async Task<IActionResult> Create([FromBody] CreateTodoCommand command, CancellationToken cancellationToken)
     {
         var todo = await _sender.Send(command, cancellationToken);
@@ -34,14 +37,17 @@ public sealed class TodosController : ControllerBase
     }
 
     [HttpPut("{id:guid}")]
+    [ProducesResponseType(200)]
     public async Task<IActionResult> Update(Guid id, [FromBody] UpdateTodoRequest request, CancellationToken cancellationToken)
         => Ok(await _sender.Send(new UpdateTodoCommand(id, request.Title), cancellationToken));
 
     [HttpPatch("{id:guid}/toggle")]
+    [ProducesResponseType(200)]
     public async Task<IActionResult> Toggle(Guid id, CancellationToken cancellationToken)
         => Ok(await _sender.Send(new ToggleTodoCommand(id), cancellationToken));
 
     [HttpDelete("{id:guid}")]
+    [ProducesResponseType(204)]
     public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
     {
         await _sender.Send(new DeleteTodoCommand(id), cancellationToken);

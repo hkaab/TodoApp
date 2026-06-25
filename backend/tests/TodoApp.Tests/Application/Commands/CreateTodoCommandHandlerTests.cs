@@ -5,7 +5,7 @@ using TodoApp.Application.Todos.Commands.CreateTodo;
 using TodoApp.Domain.Todos;
 using Xunit;
 
-namespace TodoApp.Application.Tests.Commands;
+namespace TodoApp.Tests.Application.Commands;
 
 public sealed class CreateTodoCommandHandlerTests
 {

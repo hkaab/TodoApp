@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using TodoApp.Application.Todos.Queries.GetTodoById;
 using Xunit;
 
-namespace TodoApp.Application.Tests.Queries
+namespace TodoApp.Tests.Application.Queries
 {
     public class GetTodoByIdQueryTests
     {
