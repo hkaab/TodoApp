@@ -1,10 +1,12 @@
-using System.Net;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics.CodeAnalysis;
+using System.Net;
 using TodoApp.Application.Common.Exceptions;
 
 namespace TodoApp.Api.Middleware;
 
+[ExcludeFromCodeCoverage]
 public sealed class ExceptionHandlingMiddleware
 {
     private readonly RequestDelegate _next;
