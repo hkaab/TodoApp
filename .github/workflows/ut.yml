@@ -25,7 +25,7 @@ jobs:
       working-directory: backend
     - name: Test
       run: dotnet test  --no-build --no-restore /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura --collect:"XPlat Code Coverage"                       
-      working-directory: backend/tests/TodoApp.Application.Tests    
+      working-directory: backend/tests/TodoApp.Tests    
     - name: Upload Coverage Report
       uses: actions/upload-artifact@v4
       with:
