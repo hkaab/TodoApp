@@ -1,4 +1,7 @@
 # Todo App
+![Build](https://github.com/hkaab/TodoApp/actions/workflows/ci.yml/badge.svg)
+![Build](https://github.com/hkaab/TodoApp/actions/workflows/ut.yml/badge.svg)
+![codecov](https://codecov.io/gh/hkaab/TodoApp/branch/main/graph/badge.svg)
 
 - **Backend:** ASP.NET Core Web API, Clean Architecture, SOLID, CQRS with MediatR, FluentValidation, global exception middleware, Serilog, Swagger, in-memory repository.
 
