@@ -7,29 +7,61 @@
 
 - **Frontend:** Angular standalone app, Reactive Forms, HttpClient, typed service layer, interceptor-based API error handling.
 
-## Run backend
+## Prerequisites
 
-# Prerequisites
+Before running the application, ensure the following software is installed on your machine.
 
-Install:
+### Backend
 
-- .NET 10 SDK
+- .NET 9 SDK
+- Visual Studio 2022 (17.14 or later) or Visual Studio Code
+- Git
 
-Verify installation:
+Verify your installation:
 
 ```bash
 dotnet --version
 ```
 
-Expected:
+### Frontend
 
-```text
-10.0.100
+- Node.js 22 LTS (or later)
+- npm 10+ (included with Node.js)
+- Angular CLI 20
+
+Install the Angular CLI globally:
+
+```bash
+npm install -g @angular/cli
 ```
 
-(or later)
+Verify the installation:
 
----
+```bash
+node --version
+npm --version
+ng version
+```
+
+### Recommended IDEs
+
+- Visual Studio 2022
+- Visual Studio Code
+
+Recommended VS Code extensions:
+
+- Angular Language Service
+- C#
+- ESLint
+- Prettier
+- GitLens
+
+### Optional
+
+- Postman or another API testing tool
+- Docker Desktop (if running the application with Docker)
+
+## Run backend
 
 ```bash
 cd backend/src/TodoApp.Api
