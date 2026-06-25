@@ -75,7 +75,7 @@ Swagger: `/swagger`
 ## Run frontend
 
 ```bash
-cd frontend/todo-app-ui
+cd frontend
 npm install
 npm start
 ```
