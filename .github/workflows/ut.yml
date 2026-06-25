@@ -1,0 +1,61 @@
+name: unit tests
+
+on:
+  workflow_run:
+    workflows: ["build"]
+    types:
+      - completed
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v2
+      with:
+        dotnet-version: 10.0.x
+    - name: Restore dependencies
+      run: dotnet restore
+      working-directory: backend/src
+    - name: Build
+      run: dotnet build --no-restore
+      working-directory: backend/src
+    - name: Test
+      run: dotnet test  --no-build --no-restore /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura --collect:"XPlat Code Coverage"                       
+      working-directory: backend/tests/TodoApp.Application.Tests    
+    - name: Upload Coverage Report
+      uses: actions/upload-artifact@v4
+      with:
+        name: coverage-report
+        path: coveragereport
+    - name: Upload Coverage Results
+      uses: actions/upload-artifact@v4
+      with:
+        name: coverage-results
+        path: '**/coverage.cobertura.xml'
+    - name: Install ReportGenerator
+      run: dotnet tool install -g dotnet-reportgenerator-globaltool
+    - name: Generate Coverage Report
+      run: |
+        reportgenerator \
+          -reports:**/coverage.cobertura.xml \
+          -targetdir:coveragereport \
+          -reporttypes:Html
+    - name: Find coverage files
+      run: |
+        find . -name "coverage.cobertura.xml"
+    - name: Upload coverage reports to Codecov
+      uses: codecov/codecov-action@v5
+      with:
+        files: '**/coverage.cobertura.xml'
+      
+
+
+
+
+
+
+
