@@ -106,8 +106,6 @@ public class TodosControllerTests
         var okResult = Assert.IsType<OkObjectResult>(result);
         var value = Assert.IsAssignableFrom<IEnumerable<TodoDto>>(okResult.Value);
         Assert.Empty(value);
+
     }
-
-
-
 }
