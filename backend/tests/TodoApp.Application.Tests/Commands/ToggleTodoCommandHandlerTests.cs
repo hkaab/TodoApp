@@ -5,7 +5,7 @@ using TodoApp.Application.Todos.Commands.ToggleTodo;
 using TodoApp.Domain.Todos;
 using Xunit;
 
-namespace TodoApp.Application.Tests;
+namespace TodoApp.Application.Tests.Commands;
 
 public sealed class ToggleTodoCommandHandlerTests
 {

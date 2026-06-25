@@ -6,7 +6,7 @@ using TodoApp.Application.Todos.Commands.UpdateTodo;
 using TodoApp.Domain.Todos;
 using Xunit;
 
-namespace TodoApp.Application.Tests;
+namespace TodoApp.Application.Tests.Commands;
 
 public sealed class UpdateTodoCommandHandlerTests
 {

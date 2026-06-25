@@ -2,7 +2,7 @@ using FluentAssertions;
 using TodoApp.Application.Todos.Commands.CreateTodo;
 using Xunit;
 
-namespace TodoApp.Application.Tests;
+namespace TodoApp.Application.Tests.Commands;
 
 public sealed class CreateTodoCommandValidatorTests
 {
