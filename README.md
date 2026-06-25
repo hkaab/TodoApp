@@ -182,10 +182,6 @@ Application handlers, validators, repositories, and controllers can be tested in
 - Dark Mode
 
 ---
-
-## Notes
-The backend uses an in-memory repository, as requested. It is thread-safe and scoped behind an interface so it can be replaced with EF Core, Dapper, Cosmos DB, etc. without changing the API or application layer.
-
 ## License
 
 MIT
