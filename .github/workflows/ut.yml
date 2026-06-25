@@ -19,10 +19,10 @@ jobs:
         dotnet-version: 10.0.x
     - name: Restore dependencies
       run: dotnet restore
-      working-directory: backend/src
+      working-directory: backend
     - name: Build
       run: dotnet build --no-restore
-      working-directory: backend/src
+      working-directory: backend
     - name: Test
       run: dotnet test  --no-build --no-restore /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura --collect:"XPlat Code Coverage"                       
       working-directory: backend/tests/TodoApp.Application.Tests    
