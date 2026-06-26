@@ -3,6 +3,7 @@ using MediatR;
 
 namespace TodoApp.Application.Common.Behaviours;
 
+[System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
 public sealed class ValidationBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : notnull
 {
