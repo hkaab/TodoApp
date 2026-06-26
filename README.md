@@ -69,7 +69,7 @@ dotnet restore
 dotnet run
 ```
 
-API: `https://localhost:7043` or `http://localhost:5043`
+API: `http://localhost:5044` or `https://localhost:5043`
 Swagger: `/swagger`
 
 ## Run frontend
@@ -81,6 +81,16 @@ npm start
 ```
 
 Angular app: `http://localhost:4200`
+
+## Run backend & Frontend using Docker
+
+```bash
+docker compose up
+```
+
+API: `http://localhost:5044` or `https://localhost:5043`
+Swagger: `/swagger`
+Angular app: http://localhost:4200/
 
 ## Design Decisions
 
