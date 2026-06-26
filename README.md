@@ -90,7 +90,8 @@ docker compose up
 
 API: `http://localhost:5044` or `https://localhost:5043`
 Swagger: `/swagger`
-Angular app: http://localhost:4200/
+
+Angular app: `http://localhost:4200/`
 
 ## Design Decisions
 
