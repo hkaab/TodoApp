@@ -4,14 +4,14 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     ports:
-      - "5043:8080"
+      - "5044:5044"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://+:8080
+      - ASPNETCORE_URLS=http://+:5044
 
   ui:
     build:
-      context: ./frontend/todo-app-ui
+      context: ./frontend
       dockerfile: Dockerfile
     ports:
       - "4200:80"
