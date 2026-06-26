@@ -166,6 +166,18 @@ namespace TodoApp.Tests.Infrastructure
                 await repository.DeleteAsync(Guid.NewGuid(), cts.Token);
             });
         }
+        [Fact]
+        public async Task GetAllAsync_ShouldThrowExceptionWhenCancellationRequested()
+        {
+            // Arrange
+            var repository = new TodoApp.Infrastructure.Persistence.InMemoryTodoRepository();
+            using var cts = new CancellationTokenSource();
+            cts.Cancel();
+            // Act & Assert
+            await Assert.ThrowsAsync<OperationCanceledException>(async () =>
+            {
+                await repository.GetAllAsync(cts.Token);
+            });
+        }
     }
-
 }
