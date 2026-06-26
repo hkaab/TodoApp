@@ -31,6 +31,10 @@ public sealed class InMemoryTodoRepository : ITodoRepository
     public Task UpdateAsync(TodoItem item, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
+        if (!_items.ContainsKey(item.Id))
+        {
+            throw new KeyNotFoundException();
+        }
         _items[item.Id] = item;
         return Task.CompletedTask;
     }
