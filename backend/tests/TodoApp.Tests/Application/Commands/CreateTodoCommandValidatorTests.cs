@@ -10,7 +10,7 @@ public sealed class CreateTodoCommandValidatorTests
     public void Validator_Should_Fail_When_Title_Is_Empty()
     {
         var validator = new CreateTodoCommandValidator();
-        var result = validator.Validate(new CreateTodoCommand(""));
+        var result = validator.Validate(new CreateTodoCommand(Guid.NewGuid(), ""));
         result.IsValid.Should().BeFalse();
     }
 }

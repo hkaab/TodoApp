@@ -7,7 +7,8 @@ public sealed class GetTodosQueryHandler : IRequestHandler<GetTodosQuery, IReadO
     public GetTodosQueryHandler(ITodoRepository repository) => _repository = repository;
     public async Task<IReadOnlyCollection<TodoDto>> Handle(GetTodosQuery request, CancellationToken cancellationToken)
     {
-        var items = await _repository.GetAllAsync(cancellationToken);
+        cancellationToken.ThrowIfCancellationRequested();
+        var items = await _repository.GetByUserAsync(request.UserId,cancellationToken);
         return items.OrderByDescending(x => x.CreatedAtUtc).Select(TodoDto.FromEntity).ToList();
     }
 }

@@ -15,7 +15,7 @@ public sealed class ToggleTodoCommandHandlerTests
         var repository = new Mock<ITodoRepository>();
         var handler = new ToggleTodoCommandHandler(repository.Object);
         var todoId = Guid.NewGuid();
-        var todoItem = new TodoItem("Test Todo");
+        var todoItem = new TodoItem(todoId, "Test Todo");
         repository.Setup(x => x.GetByIdAsync(todoId, It.IsAny<CancellationToken>())).ReturnsAsync(todoItem);
         await handler.Handle(new ToggleTodoCommand(todoId), CancellationToken.None);
         todoItem.IsCompleted.Should().BeTrue();

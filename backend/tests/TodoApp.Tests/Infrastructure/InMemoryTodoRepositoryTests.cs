@@ -14,7 +14,7 @@ namespace TodoApp.Tests.Infrastructure
         {
             // Arrange
             var repository = new TodoApp.Infrastructure.Persistence.InMemoryTodoRepository();
-            var todoItem = new TodoApp.Domain.Todos.TodoItem("Test Todo");
+            var todoItem = new TodoApp.Domain.Todos.TodoItem(Guid.NewGuid(), "Test Todo");
             // Act
             await repository.AddAsync(todoItem, CancellationToken.None);
             var retrievedItem = await repository.GetByIdAsync(todoItem.Id, CancellationToken.None);
@@ -29,7 +29,7 @@ namespace TodoApp.Tests.Infrastructure
         {
             // Arrange
             var repository = new TodoApp.Infrastructure.Persistence.InMemoryTodoRepository();
-            var todoItem = new TodoApp.Domain.Todos.TodoItem("Test Todo");
+            var todoItem = new TodoApp.Domain.Todos.TodoItem(Guid.NewGuid(), "Test Todo");
             await repository.AddAsync(todoItem, CancellationToken.None);
             // Act
             todoItem.Toggle();
@@ -46,7 +46,7 @@ namespace TodoApp.Tests.Infrastructure
         {
             // Arrange
             var repository = new TodoApp.Infrastructure.Persistence.InMemoryTodoRepository();
-            var todoItem = new TodoApp.Domain.Todos.TodoItem("Test Todo");
+            var todoItem = new TodoApp.Domain.Todos.TodoItem(Guid.NewGuid(), "Test Todo");
             await repository.AddAsync(todoItem, CancellationToken.None);
             // Act
             await repository.DeleteAsync(todoItem.Id, CancellationToken.None);
@@ -59,8 +59,8 @@ namespace TodoApp.Tests.Infrastructure
         {
             // Arrange
             var repository = new TodoApp.Infrastructure.Persistence.InMemoryTodoRepository();
-            var todoItem1 = new TodoApp.Domain.Todos.TodoItem("Test Todo 1");
-            var todoItem2 = new TodoApp.Domain.Todos.TodoItem("Test Todo 2");
+            var todoItem1 = new TodoApp.Domain.Todos.TodoItem(Guid.NewGuid(), "Test Todo 1");
+            var todoItem2 = new TodoApp.Domain.Todos.TodoItem(Guid.NewGuid(), "Test Todo 2");
             await repository.AddAsync(todoItem1, CancellationToken.None);
             await repository.AddAsync(todoItem2, CancellationToken.None);
             // Act
@@ -86,7 +86,7 @@ namespace TodoApp.Tests.Infrastructure
         {
             // Arrange
             var repository = new TodoApp.Infrastructure.Persistence.InMemoryTodoRepository();
-            var nonExistentItem = new TodoApp.Domain.Todos.TodoItem("Non-existent Todo");
+            var nonExistentItem = new TodoApp.Domain.Todos.TodoItem(Guid.NewGuid(), "Non-existent Todo");
             // Act & Assert
             await Assert.ThrowsAsync<KeyNotFoundException>(async () =>
             {
@@ -117,7 +117,7 @@ namespace TodoApp.Tests.Infrastructure
         {
             // Arrange
             var repository = new TodoApp.Infrastructure.Persistence.InMemoryTodoRepository();
-            var todoItem = new TodoApp.Domain.Todos.TodoItem("Test Todo");
+            var todoItem = new TodoApp.Domain.Todos.TodoItem(Guid.NewGuid(), "Test Todo");
             using var cts = new CancellationTokenSource();
             cts.Cancel();
             // Act & Assert
@@ -144,7 +144,7 @@ namespace TodoApp.Tests.Infrastructure
         {
             // Arrange
             var repository = new TodoApp.Infrastructure.Persistence.InMemoryTodoRepository();
-            var todoItem = new TodoApp.Domain.Todos.TodoItem("Test Todo");
+            var todoItem = new TodoApp.Domain.Todos.TodoItem(Guid.NewGuid(), "Test Todo");
             using var cts = new CancellationTokenSource();
             cts.Cancel();
             // Act & Assert

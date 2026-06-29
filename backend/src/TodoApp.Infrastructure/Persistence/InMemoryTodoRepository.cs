@@ -8,6 +8,16 @@ public sealed class InMemoryTodoRepository : ITodoRepository
 {
     private readonly ConcurrentDictionary<Guid, TodoItem> _items = new();
 
+    public Task<IReadOnlyCollection<TodoItem>> GetByUserAsync(Guid userId, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        var todos = _items
+            .Where(x => x.Value.UserId == userId)
+            .Select(x => x.Value)
+            .ToList();
+
+        return Task.FromResult<IReadOnlyCollection<TodoItem>>(todos);
+    }
     public Task<IReadOnlyCollection<TodoItem>> GetAllAsync(CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
@@ -45,4 +55,6 @@ public sealed class InMemoryTodoRepository : ITodoRepository
         _items.TryRemove(id, out _);
         return Task.CompletedTask;
     }
+
+
 }

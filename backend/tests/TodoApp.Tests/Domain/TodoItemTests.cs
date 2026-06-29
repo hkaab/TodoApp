@@ -15,7 +15,7 @@ namespace TodoApp.Tests.Domain
             // Arrange
             var title = "Test Todo";
             // Act
-            var todoItem = new TodoApp.Domain.Todos.TodoItem(title);
+            var todoItem = new TodoApp.Domain.Todos.TodoItem(Guid.NewGuid(), title);
             // Assert
             Assert.Equal(title, todoItem.Title);
             Assert.False(todoItem.IsCompleted);
@@ -26,7 +26,7 @@ namespace TodoApp.Tests.Domain
         public void Rename_Should_Update_Title_And_UpdatedAtUtc()
         {
             // Arrange
-            var todoItem = new TodoApp.Domain.Todos.TodoItem("Old Title");
+            var todoItem = new TodoApp.Domain.Todos.TodoItem(Guid.NewGuid(), "Old Title");
             var newTitle = "New Title";
             // Act
             todoItem.Rename(newTitle);
@@ -39,7 +39,7 @@ namespace TodoApp.Tests.Domain
         public void Toggle_Should_Change_IsCompleted_And_Update_UpdatedAtUtc()
         {
             // Arrange
-            var todoItem = new TodoApp.Domain.Todos.TodoItem("Test Todo");
+            var todoItem = new TodoApp.Domain.Todos.TodoItem(Guid.NewGuid(), "Test Todo");
             var initialIsCompleted = todoItem.IsCompleted;
             // Act
             todoItem.Toggle();
@@ -54,14 +54,14 @@ namespace TodoApp.Tests.Domain
             // Arrange
             var emptyTitle = "";
             // Act & Assert
-            var exception = Assert.Throws<ArgumentException>(() => new TodoApp.Domain.Todos.TodoItem(emptyTitle));
+            var exception = Assert.Throws<ArgumentException>(() => new TodoApp.Domain.Todos.TodoItem(Guid.NewGuid(), emptyTitle));
             Assert.Equal("Todo title is required. (Parameter 'title')", exception.Message);
         }
         [Fact]
         public void Rename_Should_Throw_Exception_For_Empty_Title()
         {
             // Arrange
-            var todoItem = new TodoApp.Domain.Todos.TodoItem("Old Title");
+            var todoItem = new TodoApp.Domain.Todos.TodoItem(Guid.NewGuid(), "Old Title");
             var emptyTitle = "";
             // Act & Assert
             var exception = Assert.Throws<ArgumentException>(() => todoItem.Rename(emptyTitle));

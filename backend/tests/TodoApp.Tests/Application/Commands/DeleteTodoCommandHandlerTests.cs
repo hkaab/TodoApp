@@ -16,7 +16,7 @@ public sealed class DeleteTodoCommandHandlerTests
         var repository = new Mock<ITodoRepository>();
         var handler = new DeleteTodoCommandHandler(repository.Object);
         var todoId = Guid.NewGuid();
-        var todoItem = new TodoItem("Test Todo");
+        var todoItem = new TodoItem(todoId, "Test Todo");
         repository.Setup(x => x.GetByIdAsync(todoId, It.IsAny<CancellationToken>())).ReturnsAsync(todoItem);
         await handler.Handle(new DeleteTodoCommand(todoId), CancellationToken.None);
         repository.Verify(x => x.DeleteAsync(todoItem.Id, It.IsAny<CancellationToken>()), Times.Once);

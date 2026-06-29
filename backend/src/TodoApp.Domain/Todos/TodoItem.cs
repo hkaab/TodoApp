@@ -6,12 +6,13 @@ public sealed class TodoItem : Entity
 {
     private TodoItem() { }
 
-    public TodoItem(string title)
+    public TodoItem(Guid userId,string title)
     {
         Id = Guid.NewGuid();
         Title = ValidateTitle(title);
         IsCompleted = false;
         CreatedAtUtc = DateTimeOffset.UtcNow;
+        UserId = userId;
     }
 
     public string Title { get; private set; } = string.Empty;
@@ -36,3 +37,4 @@ public sealed class TodoItem : Entity
         return title.Trim();
     }
 }
+

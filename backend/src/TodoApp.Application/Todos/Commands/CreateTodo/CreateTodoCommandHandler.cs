@@ -11,7 +11,7 @@ public sealed class CreateTodoCommandHandler : IRequestHandler<CreateTodoCommand
 
     public async Task<TodoDto> Handle(CreateTodoCommand request, CancellationToken cancellationToken)
     {
-        var item = new TodoItem(request.Title);
+        var item = new TodoItem(request.UserId,request.Title);
         await _repository.AddAsync(item, cancellationToken);
         return TodoDto.FromEntity(item);
     }

@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
+using TodoApp.Api.Contracts;
 using TodoApp.Api.Controllers;
 using TodoApp.Application.Todos;
 using TodoApp.Application.Todos.Commands.CreateTodo;
@@ -25,18 +26,18 @@ public class TodosControllerTests
     public async Task GetTodos_ShouldReturnOk_WithTodos()
     {
         // Arrange
+        var userId = Guid.NewGuid();
         var todos = new List<TodoDto>
         {
-            new(Guid.NewGuid(), "Task 1", false, DateTime.UtcNow,DateTime.UtcNow),
-            new(Guid.NewGuid(), "Task 2", true, DateTime.UtcNow,DateTime.UtcNow)
+            new(userId, Guid.NewGuid(), "Task 1", false, DateTime.UtcNow, DateTime.UtcNow),
+            new(userId, Guid.NewGuid(), "Task 2", true, DateTime.UtcNow, DateTime.UtcNow)
         };
 
         _mediatorMock
             .Setup(x => x.Send(It.IsAny<GetTodosQuery>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(todos);
-
         // Act
-        var result = await _controller.GetAll(CancellationToken.None);
+        var result = await _controller.GetTodos(userId,CancellationToken.None);
 
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result);
@@ -49,8 +50,10 @@ public class TodosControllerTests
     public async Task CreateTodo_ShouldReturnCreatedAtAction()
     {
         // Arrange
-        var command = new CreateTodoCommand("New task");
+        var userId = Guid.NewGuid();
+        var command = new CreateTodoCommand(userId, "New task");
         var todoDto = new TodoDto(
+            userId,
             Guid.NewGuid(),
             command.Title,
             false,
@@ -58,11 +61,13 @@ public class TodosControllerTests
             DateTime.UtcNow
         );
 
-        _mediatorMock.Setup(x => x.Send(command, It.IsAny<CancellationToken>()))
+        _mediatorMock.Setup(x => x.Send(It.IsAny<CreateTodoCommand>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(todoDto);
 
+        var request = new CreateTodoRequest(command.Title);
+
         // Act
-        var result = await _controller.Create(command, CancellationToken.None);
+        var result = await _controller.Create(userId, request, CancellationToken.None);
 
         // Assert
         var createdResult = Assert.IsType<CreatedAtActionResult>(result);
@@ -74,9 +79,11 @@ public class TodosControllerTests
     public async Task ToggleTodo_ShouldReturnOk_WithUpdatedTodo()
     {
         // Arrange
+        var userId = Guid.NewGuid();
         var todoId = Guid.NewGuid();
         var command = new ToggleTodoCommand(todoId);
         var updatedTodoDto = new TodoDto(
+            userId,
             todoId,
             "Task 1",
             true, // Assuming the task was toggled to completed
@@ -100,8 +107,12 @@ public class TodosControllerTests
         _mediatorMock
             .Setup(x => x.Send(It.IsAny<GetTodosQuery>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(todos);
+
+        var userId = Guid.NewGuid(); // Add this line
+
         // Act
-        var result = await _controller.GetAll(CancellationToken.None);
+        var result = await _controller.GetTodos(userId, CancellationToken.None); // Pass userId
+
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result);
         var value = Assert.IsAssignableFrom<IEnumerable<TodoDto>>(okResult.Value);
@@ -112,8 +123,10 @@ public class TodosControllerTests
     public async Task CreateTodo_ShouldSendCommand_ToMediator()
     {
         var todoId = Guid.NewGuid();
-        var command = new CreateTodoCommand("Test todo");
+        var userId = Guid.NewGuid();
+        var command = new CreateTodoCommand(userId, "Test todo");
         var createdTodoDto = new TodoDto(
+            userId,
             todoId,
             "Task 1",
             true, // Assuming the task was toggled to completed
@@ -124,12 +137,15 @@ public class TodosControllerTests
             .Setup(x => x.Send(command, It.IsAny<CancellationToken>()))
             .ReturnsAsync(createdTodoDto);
 
-        var result = await _controller.Create(command, CancellationToken.None);
+        var request = new CreateTodoRequest(command.Title);
+
+        // Fix: Call the correct overload with all required parameters
+        var result = await _controller.Create(userId, request, CancellationToken.None);
 
         Assert.IsType<CreatedAtActionResult>(result);
 
         _mediatorMock.Verify(
-            x => x.Send(command, It.IsAny<CancellationToken>()),
+            x => x.Send(It.Is<CreateTodoCommand>(c => c.UserId == userId && c.Title == command.Title), It.IsAny<CancellationToken>()),
             Times.Once);
     }
 }

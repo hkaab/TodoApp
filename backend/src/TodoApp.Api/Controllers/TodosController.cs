@@ -1,6 +1,7 @@
 using Asp.Versioning;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using TodoApp.Api.Contracts;
 using TodoApp.Application.Todos.Commands.CreateTodo;
 using TodoApp.Application.Todos.Commands.DeleteTodo;
 using TodoApp.Application.Todos.Commands.ToggleTodo;
@@ -20,8 +21,13 @@ public sealed class TodosController : ControllerBase
 
     [HttpGet]
     [ProducesResponseType(200)]
-    public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
-        => Ok(await _sender.Send(new GetTodosQuery(), cancellationToken));
+    public async Task<IActionResult> GetTodos( [FromHeader(Name = "X-User-Id")] Guid userId,
+    CancellationToken cancellationToken)
+    {
+        var result = await _sender.Send( new GetTodosQuery(userId), cancellationToken);
+
+        return Ok(result);
+    }
 
     [HttpGet("{id:guid}")]
     [ProducesResponseType(200)]
@@ -30,9 +36,9 @@ public sealed class TodosController : ControllerBase
 
     [HttpPost]
     [ProducesResponseType(200)]
-    public async Task<IActionResult> Create([FromBody] CreateTodoCommand command, CancellationToken cancellationToken)
+    public async Task<IActionResult> Create([FromHeader(Name = "X-User-Id")] Guid userId,[FromBody] CreateTodoRequest request, CancellationToken cancellationToken)
     {
-        var todo = await _sender.Send(command, cancellationToken);
+        var todo = await _sender.Send(new CreateTodoCommand(userId,request.Title), cancellationToken);
         return CreatedAtAction(nameof(GetById), new { id = todo.Id, version = "1.0" }, todo);
     }
 
@@ -54,5 +60,3 @@ public sealed class TodosController : ControllerBase
         return NoContent();
     }
 }
-
-public sealed record UpdateTodoRequest(string Title);

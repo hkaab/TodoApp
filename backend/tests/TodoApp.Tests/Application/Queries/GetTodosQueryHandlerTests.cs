@@ -1,9 +1,4 @@
 ﻿using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TodoApp.Application.Abstractions.Repositories;
 using TodoApp.Application.Todos.Queries.GetTodos;
 using TodoApp.Domain.Todos;
@@ -19,13 +14,13 @@ namespace TodoApp.Tests.Application.Queries
             // Arrange
             var todos = new List<TodoItem>
             {
-                new("Todo 1"),
-                new("Todo 2")
+                new TodoItem(Guid.NewGuid(), "Todo 1"),
+                new TodoItem(Guid.NewGuid(), "Todo 2")
             };
             var repositoryMock = new Mock<ITodoRepository>();
-            repositoryMock.Setup(r => r.GetAllAsync(It.IsAny<CancellationToken>())).ReturnsAsync(todos);
+            repositoryMock.Setup(r => r.GetByUserAsync(It.IsAny<Guid>(),It.IsAny<CancellationToken>())).ReturnsAsync(todos);
             var handler = new GetTodosQueryHandler(repositoryMock.Object);
-            var query = new GetTodosQuery();
+            var query = new GetTodosQuery(Guid.NewGuid());
             // Act
             var result = await handler.Handle(query, CancellationToken.None);
             // Assert
@@ -37,9 +32,9 @@ namespace TodoApp.Tests.Application.Queries
         {
             // Arrange
             var repositoryMock = new Mock<ITodoRepository>();
-            repositoryMock.Setup(r => r.GetAllAsync(It.IsAny<CancellationToken>())).ReturnsAsync(new List<TodoItem>());
+            repositoryMock.Setup(r => r.GetByUserAsync(It.IsAny<Guid>(),It.IsAny<CancellationToken>())).ReturnsAsync(new List<TodoItem>());
             var handler = new GetTodosQueryHandler(repositoryMock.Object);
-            var query = new GetTodosQuery();
+            var query = new GetTodosQuery(Guid.NewGuid());
             // Act
             var result = await handler.Handle(query, CancellationToken.None);
             // Assert
@@ -50,24 +45,45 @@ namespace TodoApp.Tests.Application.Queries
         {
             // Arrange
             var repositoryMock = new Mock<ITodoRepository>();
-            repositoryMock.Setup(r => r.GetAllAsync(It.IsAny<CancellationToken>())).ReturnsAsync(new List<TodoItem>());
+            repositoryMock.Setup(r => r.GetByUserAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync(new List<TodoItem>());
             var handler = new GetTodosQueryHandler(repositoryMock.Object);
-            var query = new GetTodosQuery();
+            var query = new GetTodosQuery(Guid.NewGuid());
             // Act
             await handler.Handle(query, CancellationToken.None);
             // Assert
-            repositoryMock.Verify(r => r.GetAllAsync(It.IsAny<CancellationToken>()), Times.Once);
+            repositoryMock.Verify(r => r.GetByUserAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()), Times.Once);
         }
         [Fact]
-        public async Task GetTodosQueryHandler_Should_Throw_Exception_When_Repository_Fails()
+        public async Task GetTodosQueryHandler_Should_Throw_When_CancellationRequested()
         {
             // Arrange
             var repositoryMock = new Mock<ITodoRepository>();
-            repositoryMock.Setup(r => r.GetAllAsync(It.IsAny<CancellationToken>())).ThrowsAsync(new Exception("Repository failure"));
             var handler = new GetTodosQueryHandler(repositoryMock.Object);
-            var query = new GetTodosQuery();
+            var query = new GetTodosQuery(Guid.NewGuid());
+            var cancellationTokenSource = new CancellationTokenSource();
+            cancellationTokenSource.Cancel();
             // Act & Assert
-            await Assert.ThrowsAsync<Exception>(() => handler.Handle(query, CancellationToken.None));
+            await Assert.ThrowsAsync<OperationCanceledException>(() => handler.Handle(query, cancellationTokenSource.Token));
+        }
+        [Fact]
+        public async Task GetTodosQueryHandler_Should_Return_Todos_For_Specific_User()
+        {
+            // Arrange
+            var userId = Guid.NewGuid();
+            var todos = new List<TodoItem>
+            {
+                new TodoItem(userId, "Todo 1"),
+                new TodoItem(userId, "Todo 2")
+            };
+            var repositoryMock = new Mock<ITodoRepository>();
+            repositoryMock.Setup(r => r.GetByUserAsync(userId, It.IsAny<CancellationToken>())).ReturnsAsync(todos);
+            var handler = new GetTodosQueryHandler(repositoryMock.Object);
+            var query = new GetTodosQuery(userId);
+            // Act
+            var result = await handler.Handle(query, CancellationToken.None);
+            // Assert
+            Assert.Equal(2, result.Count);
+            Assert.All(result, todo => Assert.Equal(userId, todo.UserId));
         }
     }
 }

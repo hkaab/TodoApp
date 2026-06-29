@@ -16,7 +16,7 @@ public sealed class UpdateTodoCommandHandlerTests
         var repository = new Mock<ITodoRepository>();
         var handler = new UpdateTodoCommandHandler(repository.Object);
         var todoId = Guid.NewGuid();
-        var todoItem = new TodoItem("Old Title");
+        var todoItem = new TodoItem(todoId, "Old Title");
         repository.Setup(x => x.GetByIdAsync(todoId, It.IsAny<CancellationToken>())).ReturnsAsync(todoItem);
         await handler.Handle(new UpdateTodoCommand(todoId, "New Title"), CancellationToken.None);
         todoItem.Title.Should().Be("New Title");
