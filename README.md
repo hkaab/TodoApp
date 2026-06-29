@@ -13,7 +13,7 @@ Before running the application, ensure the following software is installed on yo
 
 ### Backend
 
-- .NET 9 SDK
+- .NET 8 SDK
 - Visual Studio 2022 (17.14 or later) or Visual Studio Code
 - Git
 
