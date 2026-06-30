@@ -8,6 +8,7 @@ public sealed class ToggleTodoCommandHandler : IRequestHandler<ToggleTodoCommand
     public ToggleTodoCommandHandler(ITodoRepository repository) => _repository = repository;
     public async Task<TodoDto> Handle(ToggleTodoCommand request, CancellationToken cancellationToken)
     {
+        cancellationToken.ThrowIfCancellationRequested();
         var item = await _repository.GetByIdAsync(request.Id, cancellationToken) ?? throw new KeyNotFoundException($"Todo '{request.Id}' was not found.");
         item.Toggle();
         await _repository.UpdateAsync(item, cancellationToken);

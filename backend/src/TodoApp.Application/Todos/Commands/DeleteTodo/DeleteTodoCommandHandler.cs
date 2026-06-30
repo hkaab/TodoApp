@@ -8,6 +8,7 @@ public sealed class DeleteTodoCommandHandler : IRequestHandler<DeleteTodoCommand
     public DeleteTodoCommandHandler(ITodoRepository repository) => _repository = repository;
     public async Task Handle(DeleteTodoCommand request, CancellationToken cancellationToken)
     {
+        cancellationToken.ThrowIfCancellationRequested();
         var item = await _repository.GetByIdAsync(request.Id, cancellationToken) ?? throw new KeyNotFoundException($"Todo '{request.Id}' was not found.");
         await _repository.DeleteAsync(item.Id, cancellationToken);
     }
