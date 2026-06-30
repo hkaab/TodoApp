@@ -21,4 +21,12 @@ public sealed class CreateTodoCommandHandlerTests
         result.Title.Should().Be("Write tests");
         repository.Verify(x => x.AddAsync(It.IsAny<TodoItem>(), It.IsAny<CancellationToken>()), Times.Once);
     }
+    [Fact]
+    public async Task Handle_Should_Throw_When_Title_Is_Empty()
+    {
+        var repository = new Mock<ITodoRepository>();
+        var handler = new CreateTodoCommandHandler(repository.Object);
+        var userId = Guid.NewGuid();
+        await Assert.ThrowsAsync<ArgumentException>(() => handler.Handle(new CreateTodoCommand(userId, ""), CancellationToken.None));
+    }
 }

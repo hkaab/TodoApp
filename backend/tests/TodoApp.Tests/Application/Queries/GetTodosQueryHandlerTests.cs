@@ -1,4 +1,5 @@
-﻿using Moq;
+﻿using Microsoft.AspNetCore.Mvc;
+using Moq;
 using TodoApp.Application.Abstractions.Repositories;
 using TodoApp.Application.Todos.Queries.GetTodos;
 using TodoApp.Domain.Todos;
@@ -18,7 +19,7 @@ namespace TodoApp.Tests.Application.Queries
                 new TodoItem(Guid.NewGuid(), "Todo 2")
             };
             var repositoryMock = new Mock<ITodoRepository>();
-            repositoryMock.Setup(r => r.GetByUserAsync(It.IsAny<Guid>(),It.IsAny<CancellationToken>())).ReturnsAsync(todos);
+            repositoryMock.Setup(r => r.GetByUserAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync(todos);
             var handler = new GetTodosQueryHandler(repositoryMock.Object);
             var query = new GetTodosQuery(Guid.NewGuid());
             // Act
@@ -32,7 +33,7 @@ namespace TodoApp.Tests.Application.Queries
         {
             // Arrange
             var repositoryMock = new Mock<ITodoRepository>();
-            repositoryMock.Setup(r => r.GetByUserAsync(It.IsAny<Guid>(),It.IsAny<CancellationToken>())).ReturnsAsync(new List<TodoItem>());
+            repositoryMock.Setup(r => r.GetByUserAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync(new List<TodoItem>());
             var handler = new GetTodosQueryHandler(repositoryMock.Object);
             var query = new GetTodosQuery(Guid.NewGuid());
             // Act
@@ -84,6 +85,19 @@ namespace TodoApp.Tests.Application.Queries
             // Assert
             Assert.Equal(2, result.Count);
             Assert.All(result, todo => Assert.Equal(userId, todo.UserId));
+        }
+        [Fact]
+        public async Task GetTodosQueryHandler_Should_Handle_Empty_UserId()
+        {
+            // Arrange
+            var repositoryMock = new Mock<ITodoRepository>();
+            repositoryMock.Setup(r => r.GetByUserAsync(Guid.Empty, It.IsAny<CancellationToken>())).ReturnsAsync(new List<TodoItem>());
+            var handler = new GetTodosQueryHandler(repositoryMock.Object);
+            var query = new GetTodosQuery(Guid.Empty);
+            // Act
+            var result = await handler.Handle(query, CancellationToken.None);
+            // Assert
+            Assert.Empty(result);
         }
     }
 }

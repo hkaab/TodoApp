@@ -8,7 +8,8 @@ public sealed class UpdateTodoCommandHandler : IRequestHandler<UpdateTodoCommand
     public UpdateTodoCommandHandler(ITodoRepository repository) => _repository = repository;
     public async Task<TodoDto> Handle(UpdateTodoCommand request, CancellationToken cancellationToken)
     {
-        var item = await _repository.GetByIdAsync(request.Id, cancellationToken) ?? throw new NotFoundException($"Todo '{request.Id}' was not found.");
+        cancellationToken.ThrowIfCancellationRequested();
+        var item = await _repository.GetByIdAsync(request.Id, cancellationToken) ?? throw new KeyNotFoundException($"Todo '{request.Id}' was not found.");
         item.Rename(request.Title);
         await _repository.UpdateAsync(item, cancellationToken);
         return TodoDto.FromEntity(item);
