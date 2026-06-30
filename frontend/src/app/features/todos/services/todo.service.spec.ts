@@ -21,4 +21,11 @@ describe('TodoService', () => {
     expect(req.request.method).toBe('GET');
     req.flush([{ id: '1', title: 'Test', isCompleted: false, createdAtUtc: new Date().toISOString() }]);
   });
+  it('should create a todo', () => {
+    const newTodo = { title: 'New Todo' };
+    service.create(newTodo).subscribe(todo => expect(todo.title).toBe('New Todo'));
+    const req = httpMock.expectOne(`${environment.apiUrl}/todos`);
+    expect(req.request.method).toBe('POST');
+    req.flush({ id: '2', title: 'New Todo', isCompleted: false, createdAtUtc: new Date().toISOString() });
+  });A
 });
