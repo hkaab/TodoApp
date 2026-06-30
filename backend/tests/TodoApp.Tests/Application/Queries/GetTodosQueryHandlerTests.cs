@@ -107,10 +107,8 @@ namespace TodoApp.Tests.Application.Queries
             repositoryMock.Setup(r => r.GetByUserAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync((List<TodoItem>?)null);
             var handler = new GetTodosQueryHandler(repositoryMock.Object);
             var query = new GetTodosQuery(Guid.NewGuid());
-            // Act
-            var result = await handler.Handle(query, CancellationToken.None);
-            // Assert
-            Assert.Empty(result);
+            // Act & Assert
+            await Assert.ThrowsAsync<ArgumentNullException>(() => handler.Handle(query, CancellationToken.None));
         }
     }
 }
