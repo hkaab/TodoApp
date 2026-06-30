@@ -27,5 +27,5 @@ describe('TodoService', () => {
     const req = httpMock.expectOne(`${environment.apiUrl}/todos`);
     expect(req.request.method).toBe('POST');
     req.flush({ id: '2', title: 'New Todo', isCompleted: false, createdAtUtc: new Date().toISOString() });
-  });A
+  });
 });

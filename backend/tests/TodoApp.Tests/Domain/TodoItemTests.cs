@@ -67,5 +67,14 @@ namespace TodoApp.Tests.Domain
             var exception = Assert.Throws<ArgumentException>(() => todoItem.Rename(emptyTitle));
             Assert.Equal("Todo title is required. (Parameter 'title')", exception.Message);
         }
+        [Fact]
+        public void Constructor_Should_Throw_Exception_For_Null_Title()
+        {
+            // Arrange
+            string nullTitle = null!;
+            // Act & Assert
+            var exception = Assert.Throws<ArgumentException>(() => new TodoApp.Domain.Todos.TodoItem(Guid.NewGuid(), nullTitle));
+            Assert.Equal("Todo title is required. (Parameter 'title')", exception.Message);
+        }
     }
 }

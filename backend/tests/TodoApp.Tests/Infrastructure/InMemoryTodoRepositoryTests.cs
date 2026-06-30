@@ -240,5 +240,33 @@ namespace TodoApp.Tests.Infrastructure
             Assert.Single(user2Items);
             Assert.Equal(todoItem2.Id, user2Items.First().Id);
         }
+        [Fact]
+        public async Task GetByUserAsync_ShouldReturnEmptyCollectionForNonExistentUser()
+        {
+            // Arrange
+            var repository = new TodoApp.Infrastructure.Persistence.InMemoryTodoRepository();
+            var userId = Guid.NewGuid();
+            // Act
+            var userItems = await repository.GetByUserAsync(userId, CancellationToken.None);
+            // Assert
+            Assert.Empty(userItems);
+        }
+        [Fact]
+        public async Task GetByUserAsync_ShouldReturnItemsInOrderOfAddition()
+        {
+            // Arrange
+            var repository = new TodoApp.Infrastructure.Persistence.InMemoryTodoRepository();
+            var userId = Guid.NewGuid();
+            var todoItem1 = new TodoApp.Domain.Todos.TodoItem(userId, "Test Todo 1");
+            var todoItem2 = new TodoApp.Domain.Todos.TodoItem(userId, "Test Todo 2");
+            await repository.AddAsync(todoItem1, CancellationToken.None);
+            await repository.AddAsync(todoItem2, CancellationToken.None);
+            // Act
+            var userItems = await repository.GetByUserAsync(userId, CancellationToken.None);
+            // Assert
+            Assert.Equal(2, userItems.Count);
+            Assert.Equal(todoItem1.Id, userItems.First().Id);
+            Assert.Equal(todoItem2.Id, userItems.Last().Id);
+        }
     }
 }
