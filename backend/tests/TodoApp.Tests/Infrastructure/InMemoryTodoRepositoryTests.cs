@@ -179,5 +179,66 @@ namespace TodoApp.Tests.Infrastructure
                 await repository.GetAllAsync(cts.Token);
             });
         }
+        [Fact]
+        public async Task GetByUserAsync_ShouldReturnItemsForSpecificUser()
+        {
+            // Arrange
+            var repository = new TodoApp.Infrastructure.Persistence.InMemoryTodoRepository();
+            var userId = Guid.NewGuid();
+            var todoItem1 = new TodoApp.Domain.Todos.TodoItem(userId, "Test Todo 1");
+            var todoItem2 = new TodoApp.Domain.Todos.TodoItem(userId, "Test Todo 2");
+            await repository.AddAsync(todoItem1, CancellationToken.None);
+            await repository.AddAsync(todoItem2, CancellationToken.None);
+            // Act
+            var userItems = await repository.GetByUserAsync(userId, CancellationToken.None);
+            // Assert
+            Assert.Equal(2, userItems.Count);
+            Assert.Contains(userItems, item => item.Id == todoItem1.Id);
+            Assert.Contains(userItems, item => item.Id == todoItem2.Id);
+        }
+        [Fact]
+        public async Task GetByUserAsync_ShouldReturnEmptyCollectionForUserWithNoItems()
+        {
+            // Arrange
+            var repository = new TodoApp.Infrastructure.Persistence.InMemoryTodoRepository();
+            var userId = Guid.NewGuid();
+            // Act
+            var userItems = await repository.GetByUserAsync(userId, CancellationToken.None);
+            // Assert
+            Assert.Empty(userItems);
+        }
+        [Fact]
+        public async Task GetByUserAsync_ShouldThrowExceptionWhenCancellationRequested()
+        {
+            // Arrange
+            var repository = new TodoApp.Infrastructure.Persistence.InMemoryTodoRepository();
+            using var cts = new CancellationTokenSource();
+            cts.Cancel();
+            // Act & Assert
+            await Assert.ThrowsAsync<OperationCanceledException>(async () =>
+            {
+                await repository.GetByUserAsync(Guid.NewGuid(), cts.Token);
+            });
+        }
+        [Fact]
+        public async Task GetByUserAsync_ShouldReturnItemsForMultipleUsers()
+        {
+            // Arrange
+            var repository = new TodoApp.Infrastructure.Persistence.InMemoryTodoRepository();
+            var userId1 = Guid.NewGuid();
+            var userId2 = Guid.NewGuid();
+            var todoItem1 = new TodoApp.Domain.Todos.TodoItem(userId1, "Test Todo 1");
+            var todoItem2 = new TodoApp.Domain.Todos.TodoItem(userId2, "Test Todo 2");
+            await repository.AddAsync(todoItem1, CancellationToken.None);
+            await repository.AddAsync(todoItem2, CancellationToken.None);
+            // Act
+            var user1Items = await repository.GetByUserAsync(userId1, CancellationToken.None);
+            var user2Items = await repository.GetByUserAsync(userId2, CancellationToken.None);
+            // Assert
+            Assert.Single(user1Items);
+            Assert.Equal(todoItem1.Id, user1Items.First().Id);
+            Assert.Single(user2Items);
+            Assert.Equal(todoItem2.Id, user2Items.First().Id);
+        }
     }
 }
